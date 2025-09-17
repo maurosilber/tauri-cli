@@ -100,14 +100,15 @@ fn tray(app: &mut App) -> SetupResult {
                     state.stop_service();
                 }
             }
+            &_ => unimplemented!("command not implemented")
         })
         .build(app)?;
     Ok(())
 }
 
-fn set_dock_visibility(app: &AppHandle, visible: bool) {
+fn set_dock_visibility(_app: &AppHandle, _visible: bool) {
     #[cfg(target_os = "macos")]
-    let _ = app.set_dock_visibility(visible);
+    let _ = _app.set_dock_visibility(_visible);
 }
 
 fn open_window(app: &tauri::AppHandle, label: &'static str) {
