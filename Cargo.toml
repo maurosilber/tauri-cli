@@ -1,0 +1,14 @@
+[workspace]
+members = ["src-tauri", "service", "cli"]
+resolver = "2"
+
+[workspace.package]
+authors = ["nodevisa"]
+edition = "2024"
+version = "0.1.0"
+
+[workspace.dependencies]
+cli = { path = "cli" }
+service = { path = "service" }
+
+clap = "*"

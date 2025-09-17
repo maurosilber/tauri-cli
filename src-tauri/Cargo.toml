@@ -1,0 +1,23 @@
+[package]
+name = "nodevisa"
+version = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+crate-type = ["staticlib", "cdylib", "rlib"]
+name = "desktop_lib"
+
+[build-dependencies]
+tauri-build = { version = "2", features = ["config-toml"] }
+
+[dependencies]
+cli = { workspace = true }
+service = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
+
+serde_json = "*"
+tauri = { version = "2", features = ["tray-icon", "config-toml"] }
+tauri-plugin-shell = "2"

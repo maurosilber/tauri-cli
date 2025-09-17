@@ -1,0 +1,29 @@
+product-name = "example-tauri-cli"
+version = "0.1.0"
+identifier = "com.example-tauri-cli"
+
+[build]
+frontend-dist = "../frontend"
+remove-unused-commands = true
+
+[[app.windows]]
+label = "main"
+create = false
+title = "Main"
+hiddenTitle = false
+url = "index.html"
+
+[app.security]
+csp = "null"
+
+[bundle]
+active = true
+targets = ["app", "appimage"]
+icon = [
+  "icons/32x32.png",
+  "icons/128x128.png",
+  "icons/128x128@2x.png",
+  "icons/icon.icns",
+  "icons/icon.ico",
+]
+external-bin = ["../target/debug/cli", "../target/debug/service"]

@@ -1,0 +1,42 @@
+[workspace]
+channels = ["https://prefix.dev/conda-forge"]
+platforms = ["linux-64", "osx-arm64", "win-64"]
+
+[target.win.tasks.exe]
+cmd = "target/debug/nodevisa.exe"
+depends-on = ["build-tauri"]
+
+[target.osx.tasks.cli]
+cmd = "target/debug/bundle/macos/Nodevisa.app/Contents/MacOS/nodevisa"
+depends-on = ["build-tauri"]
+
+[target.osx.tasks.app]
+cmd = "open target/debug/bundle/macos/Nodevisa.app"
+depends-on = ["build-tauri"]
+
+[tasks.build-tauri]
+cmd = "cargo tauri build --debug"
+depends-on = [
+    { task = "build-sidecar", args = [
+        "cli",
+    ] },
+    { task = "build-sidecar", args = [
+        "service",
+    ] },
+]
+inputs = ["src-tauri", "frontend"]
+outputs = ["target/debug/nodevisa"]
+
+[tasks.build-sidecar]
+args = ["package"]
+cmd = "cargo build -p {{ package }} && ln -f target/debug/{{ package }} target/debug/{{ package }}-$(pixi run target-triple)"
+inputs = ["{{ package }}"]
+outputs = ["target/debug/{{ package }}"]
+
+[tasks.target-triple]
+cmd = "rustc -Vv | grep host | cut -f2 -d' '"
+
+[dependencies]
+rust = "*"
+rust-src = "*"
+tauri = "*"
