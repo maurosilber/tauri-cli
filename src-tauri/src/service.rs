@@ -10,7 +10,7 @@ impl Service {
     pub fn new(app: &AppHandle) -> Self {
         use tauri_plugin_shell::ShellExt;
 
-        println("opening service...")
+        println!("opening service...");
 
         let (rx, tx) = app
             .shell()
@@ -19,15 +19,15 @@ impl Service {
             .spawn()
             .expect("Failed to spawn sidecar");
 
-        println("opened service")
+        println!("opened service");
 
         Self { _rx: rx, tx }
     }
 
     pub fn shutdown(mut self) {
-        println("closing service...")
+        println!("closing service...");
         match self.tx.write(b"\x03") {
-            Ok(_) => println("closed service"),
+            Ok(_) => println!("closed service"),
             Err(e) => eprintln!("could not close the service: {e:?}"),
         }
     }
