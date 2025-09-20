@@ -2,3 +2,6 @@
 name = "service"
 version = { workspace = true }
 edition = { workspace = true }
+
+[dependencies]
+tokio = { version = "*", features = ["rt-multi-thread", "macros", "signal"] }
