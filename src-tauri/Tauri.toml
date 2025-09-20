@@ -1,6 +1,6 @@
-product-name = "example-tauri-cli"
+product-name = "nodevisa"
 version = "0.1.0"
-identifier = "com.example-tauri-cli"
+identifier = "com.nodevisa"
 
 [build]
 frontend-dist = "../frontend"
