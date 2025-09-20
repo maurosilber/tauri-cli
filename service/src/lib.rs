@@ -6,7 +6,7 @@ pub async fn main() {
     let mut file = OpenOptions::new()
         .create(true)
         .append(true)
-        .open("/Users/maurosilber/git/nodevisa/tauri-tray/output.txt")
+        .open("output.txt")
         .expect("Unable to open file");
 
     writeln!(file, "Hello, file!").expect("Unable to write to file");
