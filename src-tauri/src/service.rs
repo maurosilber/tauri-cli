@@ -26,11 +26,42 @@ impl Service {
 
     #[cfg(target_os = "windows")]
     pub fn shutdown(mut self) {
-        if let Some(pid) = self.tx.pid() {
-            // Send CTRL+C event to the process group
-            let _ = Command::new("taskkill")
-                .args(&["/Pid", &pid.to_string(), "/T", "/F"])
-                .output();
+        use windows_sys::Win32::System::Console::{
+            AttachConsole, CTRL_C_EVENT, FreeConsole, GenerateConsoleCtrlEvent,
+        };
+        println!("Shutting down service...");
+
+        let pid = self.tx.pid();
+
+        unsafe {
+            // Detach from the current console (if any)
+            FreeConsole();
+
+            // Attach to the console of the target process
+            if AttachConsole(pid) == 0 {
+                eprintln!(
+                    "Failed to attach to console of PID {pid}. Error: {}",
+                    std::io::Error::last_os_error()
+                );
+                // If attaching fails, try to kill the process as a fallback
+                self.tx.kill().expect("Failed to kill child process");
+                return;
+            }
+
+            // Generate the Ctrl+C event
+            if GenerateConsoleCtrlEvent(CTRL_C_EVENT, 0) == 0 {
+                eprintln!(
+                    "Failed to send Ctrl+C event to PID {}. Error: {}",
+                    pid,
+                    std::io::Error::last_os_error()
+                );
+                // If attaching fails, try to kill the process as a fallback
+                self.tx.kill().expect("Failed to kill child process");
+                return;
+            }
+
+            // Detach from the process's console
+            FreeConsole();
         }
     }
 
