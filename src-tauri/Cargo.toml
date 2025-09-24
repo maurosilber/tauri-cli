@@ -1,7 +1,15 @@
 [package]
-name = "nodevisa"
+name = "nv"
 version = { workspace = true }
 edition = { workspace = true }
+
+[[bin]]
+name = "nv"
+path = "src/main.rs"
+
+[[bin]]
+name = "nodevisa"
+path = "bin/nodevisa.rs"
 
 [lib]
 # The `_lib` suffix may seem redundant but it is necessary
