@@ -22,4 +22,8 @@ serde_json = "*"
 tauri = { version = "2", features = ["tray-icon", "config-toml"] }
 tauri-plugin-shell = "2"
 
+[target.'cfg(windows)'.dependencies]
 windows-sys = { version = "*", features = ["Win32_System_Console"] }
+
+[target.'cfg(unix)'.dependencies]
+nix = { version = "*", features = ["signal"] }

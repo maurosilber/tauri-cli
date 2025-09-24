@@ -26,4 +26,3 @@ icon = [
   "icons/icon.icns",
   "icons/icon.ico",
 ]
-external-bin = ["../target/debug/cli", "../target/debug/service"]

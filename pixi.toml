@@ -16,25 +16,8 @@ depends-on = ["build-tauri"]
 
 [tasks.build-tauri]
 cmd = "cargo tauri build --debug"
-depends-on = [
-    { task = "build-sidecar", args = [
-        "cli",
-    ] },
-    { task = "build-sidecar", args = [
-        "service",
-    ] },
-]
-inputs = ["src-tauri", "frontend"]
+inputs = ["src-tauri", "frontend", "service", "cli", "Cargo.lock"]
 outputs = ["target/debug/nodevisa"]
-
-[tasks.build-sidecar]
-args = ["package"]
-cmd = "cargo build -p {{ package }} && ln -f target/debug/{{ package }} target/debug/{{ package }}-$(pixi run target-triple)"
-inputs = ["{{ package }}"]
-outputs = ["target/debug/{{ package }}"]
-
-[tasks.target-triple]
-cmd = "rustc -Vv | grep host | cut -f2 -d' '"
 
 [dependencies]
 rust = "*"

@@ -9,11 +9,11 @@ pub async fn main() {
         .open("output.txt")
         .expect("Unable to open file");
 
-    writeln!(file, "Hello, file!").expect("Unable to write to file");
     println!("Ctrl+C to exit.");
+    writeln!(file, "Started service.").expect("Unable to write to file");
     tokio::signal::ctrl_c()
         .await
         .expect("failed to listen for event");
     println!("Received Ctrl+C. Exit.");
-    writeln!(file, "Goodbye, file!").expect("Unable to write to file");
+    writeln!(file, "Stopped service.").expect("Unable to write to file");
 }

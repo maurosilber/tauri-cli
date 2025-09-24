@@ -1,7 +1,10 @@
-#[cfg(desktop)]
 use std::error::Error;
-use std::sync::Mutex;
+use std::{
+    process::{Child, Command},
+    sync::Mutex,
+};
 
+use tauri::utils::platform::current_exe;
 use tauri::{
     App, AppHandle, Manager,
     menu::{CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder},
@@ -13,19 +16,21 @@ type SetupResult = Result<(), Box<dyn Error>>;
 
 #[derive(Default)]
 struct AppState {
-    service: Option<service::Service>,
+    service: Option<Child>,
 }
 
 impl AppState {
-    fn start_service(&mut self, app: &AppHandle) {
+    fn start_service(&mut self) {
         if self.service.is_none() {
-            self.service = Some(service::Service::new(app))
+            let exe = current_exe().unwrap();
+            let cmd = Command::new(exe).arg("service").spawn().unwrap();
+            self.service = Some(cmd);
         }
     }
 
     fn stop_service(&mut self) {
-        if let Some(x) = self.service.take() {
-            x.shutdown();
+        if let Some(ref mut child) = self.service.take() {
+            service::shutdown(child);
         }
     }
 }
@@ -95,12 +100,12 @@ fn tray(app: &mut App) -> SetupResult {
                     .is_checked()
                     .expect("could not access service menu checked status")
                 {
-                    state.start_service(app);
+                    state.start_service();
                 } else {
                     state.stop_service();
                 }
             }
-            &_ => unimplemented!("command not implemented")
+            &_ => unimplemented!("command not implemented"),
         })
         .build(app)?;
     Ok(())
